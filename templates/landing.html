@@ -1,0 +1,747 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Welcome to Hamzify - Premium Online Shopping{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        position: relative;
+        background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), 
+                    url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        margin-top: -1.5rem !important;
+        margin-bottom: -2rem !important;
+    }
+    
+    .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.15) 100%);
+        z-index: 1;
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        color: white;
+        text-align: center;
+        padding: 2rem;
+    }
+    
+    .hero-title {
+        font-size: 4rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        animation: fadeInDown 1s ease;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        animation: fadeInUp 1s ease 0.3s both;
+    }
+    
+    .availability-badge {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50px;
+        padding: 1rem 2rem;
+        display: inline-block;
+        margin-bottom: 2rem;
+        animation: fadeInUp 1s ease 0.4s both;
+    }
+    
+    .availability-badge i {
+        color: #f093fb;
+        margin-right: 10px;
+    }
+    
+    .availability-badge span {
+        font-weight: 600;
+    }
+    
+    .excluded-countries {
+        background: rgba(255, 68, 68, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 68, 68, 0.3);
+        border-radius: 50px;
+        padding: 0.8rem 1.5rem;
+        display: inline-block;
+        margin-top: 1.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .excluded-countries i {
+        color: #ff4444;
+        margin-right: 8px;
+    }
+    
+    .hero-buttons {
+        animation: fadeInUp 1s ease 0.6s both;
+    }
+    
+    .hero-buttons .btn {
+        padding: 1rem 2.5rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s;
+        border-radius: 50px;
+        margin: 0 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .hero-buttons .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+    }
+    
+    .hero-buttons .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+    
+    .hero-buttons .btn-warning {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        border: none;
+        color: white;
+    }
+    
+    .hero-buttons .btn-warning:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+    }
+    
+    .floating-elements {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 1;
+    }
+    
+    .floating-element {
+        position: absolute;
+        opacity: 0.1;
+        animation: float 6s ease-in-out infinite;
+    }
+    
+    .element1 {
+        top: 20%;
+        left: 10%;
+        font-size: 5rem;
+        animation-delay: 0s;
+    }
+    
+    .element2 {
+        bottom: 20%;
+        right: 10%;
+        font-size: 4rem;
+        animation-delay: 2s;
+    }
+    
+    .element3 {
+        top: 40%;
+        right: 20%;
+        font-size: 3.5rem;
+        animation-delay: 1s;
+    }
+    
+    .element4 {
+        bottom: 30%;
+        left: 20%;
+        font-size: 4.5rem;
+        animation-delay: 3s;
+    }
+    
+    .stats-section {
+        background: white;
+        padding: 4rem 0;
+        position: relative;
+        z-index: 3;
+    }
+    
+    .stat-item {
+        text-align: center;
+        padding: 2rem;
+    }
+    
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #667eea;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+        font-size: 1.1rem;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .stat-icon {
+        font-size: 2.5rem;
+        color: #f093fb;
+        margin-bottom: 1rem;
+    }
+    
+    .features-section {
+        padding: 5rem 0;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+    
+    .feature-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s;
+        height: 100%;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    
+    .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+        color: #667eea;
+    }
+    
+    .feature-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #333;
+    }
+    
+    .feature-description {
+        color: #6c757d;
+        line-height: 1.6;
+    }
+    
+    .cta-section {
+        padding: 5rem 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-align: center;
+    }
+    
+    .cta-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    
+    .cta-subtitle {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+    }
+    
+    .cta-button {
+        background: white;
+        color: #667eea;
+        padding: 1rem 3rem;
+        border-radius: 50px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border: none;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .cta-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        color: #764ba2;
+    }
+    
+    /* Country Notice */
+    .country-notice {
+        background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+        border-left: 4px solid #ff4444;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .notice-icon {
+        font-size: 2.5rem;
+        color: #ff4444;
+    }
+    
+    .notice-content h4 {
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+    
+    .notice-content p {
+        color: #666;
+        margin-bottom: 0;
+    }
+    
+    .country-flags {
+        display: flex;
+        gap: 1rem;
+        margin-left: auto;
+    }
+    
+    .flag-item {
+        text-align: center;
+        opacity: 0.5;
+        filter: grayscale(100%);
+        transition: all 0.3s;
+    }
+    
+    .flag-item:hover {
+        opacity: 1;
+        filter: grayscale(0%);
+    }
+    
+    .flag-item img {
+        width: 40px;
+        height: 30px;
+        object-fit: cover;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .flag-item span {
+        display: block;
+        font-size: 0.7rem;
+        color: #999;
+        margin-top: 0.2rem;
+    }
+    
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0) rotate(0deg);
+        }
+        50% {
+            transform: translateY(-20px) rotate(5deg);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.5rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+        }
+        
+        .hero-buttons .btn {
+            display: block;
+            margin: 1rem auto;
+            width: 80%;
+        }
+        
+        .stat-item {
+            margin-bottom: 2rem;
+        }
+        
+        .cta-title {
+            font-size: 2rem;
+        }
+        
+        .country-notice {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .country-flags {
+            margin-left: 0;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section with Background Image -->
+<div class="hero-section">
+    <div class="hero-overlay"></div>
+    
+    <!-- Floating Icons for Visual Interest -->
+    <div class="floating-elements">
+        <div class="floating-element element1">
+            <i class="bi bi-bag"></i>
+        </div>
+        <div class="floating-element element2">
+            <i class="bi bi-cart"></i>
+        </div>
+        <div class="floating-element element3">
+            <i class="bi bi-credit-card"></i>
+        </div>
+        <div class="floating-element element4">
+            <i class="bi bi-truck"></i>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center hero-content">
+                <!-- Availability Badge -->
+                <div class="availability-badge">
+                    <i class="bi bi-globe"></i>
+                    <span>Available Worldwide</span>
+                </div>
+                
+                <h1 class="hero-title">
+                    Welcome to <span style="color: #f093fb;">Hamzify</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Discover Amazing Products at Unbeatable Prices
+                </p>
+                
+                <!-- Country Exclusion Notice -->
+                <div class="excluded-countries">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <span>Not available in USA, Israel, and India</span>
+                </div>
+                
+                <p class="lead mb-5" style="color: rgba(255,255,255,0.9);">
+                    Join thousands of happy customers shopping with us today!
+                </p>
+                <div class="hero-buttons">
+                    <a href="/accounts/login/" class="btn btn-primary btn-lg">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                    </a>
+                    <a href="/accounts/register/" class="btn btn-warning btn-lg">
+                        <i class="bi bi-person-plus me-2"></i>Register
+                    </a>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="row mt-5 pt-5">
+                    <div class="col-4">
+                        <h3 class="text-white mb-0">50K+</h3>
+                        <small class="text-white-50">Happy Customers</small>
+                    </div>
+                    <div class="col-4">
+                        <h3 class="text-white mb-0">10K+</h3>
+                        <small class="text-white-50">Products</small>
+                    </div>
+                    <div class="col-4">
+                        <h3 class="text-white mb-0">24/7</h3>
+                        <small class="text-white-50">Support</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Country Notice Section -->
+<div class="container mt-5">
+    <div class="country-notice">
+        <div class="notice-icon">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+        </div>
+        <div class="notice-content">
+            <h4>Shipping Information</h4>
+            <p>We ship to all countries worldwide except United States, Israel, and India. We apologize for any inconvenience.</p>
+        </div>
+        <div class="country-flags">
+            <div class="flag-item">
+                <img src="https://flagcdn.com/w320/us.png" alt="USA Flag">
+                <span>USA</span>
+            </div>
+            <div class="flag-item">
+                <img src="https://flagcdn.com/w320/il.png" alt="Israel Flag">
+                <span>Israel</span>
+            </div>
+            <div class="flag-item">
+                <img src="https://flagcdn.com/w320/in.png" alt="India Flag">
+                <span>India</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Section -->
+<div class="stats-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <div class="stat-number">50,000+</div>
+                    <div class="stat-label">Happy Customers</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="bi bi-box"></i>
+                    </div>
+                    <div class="stat-number">10,000+</div>
+                    <div class="stat-label">Products</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="bi bi-truck"></i>
+                    </div>
+                    <div class="stat-number">Free</div>
+                    <div class="stat-label">Shipping Over $50</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Secure Payment</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="features-section">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h2 class="display-5 fw-bold mb-3">Why Choose Hamzify?</h2>
+                <p class="lead text-muted">Experience the best online shopping with our premium features</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-rocket-takeoff"></i>
+                    </div>
+                    <h3 class="feature-title">Fast Delivery</h3>
+                    <p class="feature-description">
+                        Get your products delivered within 2-3 business days with our express shipping service.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-shield-lock"></i>
+                    </div>
+                    <h3 class="feature-title">Secure Payments</h3>
+                    <p class="feature-description">
+                        Your transactions are protected with 256-bit SSL encryption and secure payment gateways.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-arrow-repeat"></i>
+                    </div>
+                    <h3 class="feature-title">Easy Returns</h3>
+                    <p class="feature-description">
+                        30-day money-back guarantee. Return products hassle-free with our simple process.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-headset"></i>
+                    </div>
+                    <h3 class="feature-title">24/7 Support</h3>
+                    <p class="feature-description">
+                        Our customer support team is available round the clock to assist you with any queries.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-gift"></i>
+                    </div>
+                    <h3 class="feature-title">Special Offers</h3>
+                    <p class="feature-description">
+                        Enjoy exclusive discounts, seasonal sales, and loyalty rewards for regular customers.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-phone"></i>
+                    </div>
+                    <h3 class="feature-title">Mobile Friendly</h3>
+                    <p class="feature-description">
+                        Shop on the go with our fully responsive website optimized for all devices.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action Section -->
+<div class="cta-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h2 class="cta-title">Ready to Start Shopping?</h2>
+                <p class="cta-subtitle">
+                    Join Hamzify today and get 10% off on your first purchase!
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="/products/" class="cta-button">
+                        <i class="bi bi-shop me-2"></i>Browse Products
+                    </a>
+                    <a href="/accounts/register/" class="btn btn-outline-light btn-lg rounded-pill px-5">
+                        Sign Up Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Product Categories Preview -->
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12 text-center mb-4">
+            <h2 class="fw-bold">Shop by Category</h2>
+            <p class="text-muted">Explore our wide range of product categories</p>
+        </div>
+    </div>
+    <div class="row g-3">
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="card border-0 shadow-sm text-center p-3 category-card">
+                <i class="bi bi-phone display-4 text-primary mb-2"></i>
+                <h6 class="mb-0">Electronics</h6>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="card border-0 shadow-sm text-center p-3 category-card">
+                <i class="bi bi-tag display-4 text-success mb-2"></i>
+                <h6 class="mb-0">Fashion</h6>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="card border-0 shadow-sm text-center p-3 category-card">
+                <i class="bi bi-house display-4 text-warning mb-2"></i>
+                <h6 class="mb-0">Home & Living</h6>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="card border-0 shadow-sm text-center p-3 category-card">
+                <i class="bi bi-book display-4 text-info mb-2"></i>
+                <h6 class="mb-0">Books</h6>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="card border-0 shadow-sm text-center p-3 category-card">
+                <i class="bi bi-bicycle display-4 text-danger mb-2"></i>
+                <h6 class="mb-0">Sports</h6>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="card border-0 shadow-sm text-center p-3 category-card">
+                <i class="bi bi-gift display-4 text-purple mb-2"></i>
+                <h6 class="mb-0">Toys</h6>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Worldwide Shipping Notice -->
+<div class="container mb-5">
+    <div class="alert alert-info text-center py-4" style="background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%); border: 2px dashed #667eea;">
+        <i class="bi bi-truck display-4 d-block mb-3" style="color: #667eea;"></i>
+        <h4 class="fw-bold">🌍 Worldwide Shipping Available</h4>
+        <p class="mb-0">We ship to all countries except USA, Israel, and India. Fast & reliable shipping worldwide!</p>
+    </div>
+</div>
+
+<style>
+    .category-card {
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border-radius: 10px;
+    }
+    
+    .category-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    .category-card:hover i,
+    .category-card:hover h6 {
+        color: white !important;
+    }
+    
+    .text-purple {
+        color: #764ba2;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,1176 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Featured Products | Hamzify{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Page Header with Gradient */
+    .page-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 60px 0;
+        margin-bottom: 50px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .page-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+        background-repeat: no-repeat;
+        background-position: bottom;
+        opacity: 0.1;
+        animation: wave 10s linear infinite;
+    }
+    
+    @keyframes wave {
+        0% { background-position: bottom; }
+        50% { background-position: bottom 20px right; }
+        100% { background-position: bottom; }
+    }
+    
+    .page-header .container {
+        position: relative;
+        z-index: 2;
+    }
+    
+    .page-header h1 {
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: white;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        animation: fadeInUp 0.8s ease;
+    }
+    
+    .page-header p {
+        font-size: 1.2rem;
+        color: rgba(255,255,255,0.9);
+        margin-bottom: 0;
+        animation: fadeInUp 1s ease;
+    }
+    
+    .breadcrumb-custom {
+        background: rgba(255,255,255,0.1);
+        padding: 10px 20px;
+        border-radius: 50px;
+        display: inline-block;
+        margin-bottom: 20px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .breadcrumb-custom a {
+        color: white;
+        text-decoration: none;
+    }
+    
+    .breadcrumb-custom .separator {
+        color: rgba(255,255,255,0.5);
+        margin: 0 10px;
+    }
+    
+    .breadcrumb-custom .active {
+        color: rgba(255,255,255,0.8);
+    }
+    
+    /* Filter Bar */
+    .filter-bar {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .results-count {
+        color: #64748b;
+        font-size: 0.95rem;
+    }
+    
+    .results-count span {
+        font-weight: 600;
+        color: #2563eb;
+        background: #eef2ff;
+        padding: 5px 10px;
+        border-radius: 20px;
+        margin: 0 5px;
+    }
+    
+    .filter-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    
+    .sort-dropdown {
+        position: relative;
+    }
+    
+    .sort-btn {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        padding: 10px 20px;
+        border-radius: 10px;
+        color: #1e293b;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .sort-btn:hover {
+        background: #eef2ff;
+        border-color: #2563eb;
+    }
+    
+    .sort-btn i {
+        color: #2563eb;
+    }
+    
+    .sort-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        width: 200px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        padding: 10px 0;
+        margin-top: 5px;
+        display: none;
+        z-index: 100;
+    }
+    
+    .sort-menu.show {
+        display: block;
+        animation: fadeIn 0.3s ease;
+    }
+    
+    .sort-item {
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .sort-item:hover {
+        background: #f1f5f9;
+        color: #2563eb;
+    }
+    
+    .sort-item.active {
+        background: #eef2ff;
+        color: #2563eb;
+        font-weight: 500;
+    }
+    
+    .view-toggle {
+        display: flex;
+        gap: 5px;
+        background: #f8fafc;
+        padding: 5px;
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .view-btn {
+        width: 40px;
+        height: 40px;
+        border: none;
+        background: transparent;
+        border-radius: 8px;
+        color: #64748b;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .view-btn:hover {
+        background: #e2e8f0;
+        color: #1e293b;
+    }
+    
+    .view-btn.active {
+        background: #2563eb;
+        color: white;
+    }
+    
+    /* Product Card - Modern Design */
+    .product-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+        position: relative;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    .product-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(37, 99, 235, 0.15);
+    }
+    
+    /* Product Badges */
+    .product-badges {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        z-index: 10;
+        display: flex;
+        gap: 5px;
+    }
+    
+    .badge {
+        padding: 5px 12px;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .badge-new {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+    }
+    
+    .badge-sale {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+    }
+    
+    .badge-featured {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: white;
+    }
+    
+    /* Wishlist Button */
+    .wishlist-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 40px;
+        height: 40px;
+        background: white;
+        border: none;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 10;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        transition: all 0.3s;
+    }
+    
+    .wishlist-btn:hover {
+        transform: scale(1.1);
+    }
+    
+    .wishlist-btn i {
+        color: #64748b;
+        transition: all 0.3s;
+    }
+    
+    .wishlist-btn.active i {
+        color: #ef4444;
+        font-weight: 900;
+    }
+    
+    .wishlist-btn:hover i {
+        color: #ef4444;
+    }
+    
+    /* Product Image */
+    .product-image-wrapper {
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 1 / 1;
+        background: #f8fafc;
+    }
+    
+    .product-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s;
+    }
+    
+    .product-card:hover .product-image {
+        transform: scale(1.1);
+    }
+    
+    /* Quick View Overlay */
+    .quick-view-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    .product-card:hover .quick-view-overlay {
+        opacity: 1;
+    }
+    
+    .quick-view-btn {
+        background: white;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 50px;
+        font-weight: 600;
+        color: #1e293b;
+        transform: translateY(20px);
+        transition: all 0.3s;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .product-card:hover .quick-view-btn {
+        transform: translateY(0);
+    }
+    
+    .quick-view-btn:hover {
+        background: #2563eb;
+        color: white;
+    }
+    
+    /* Product Info */
+    .product-info {
+        padding: 20px;
+    }
+    
+    .product-category {
+        color: #2563eb;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 5px;
+    }
+    
+    .product-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+    
+    .product-name a {
+        color: #1e293b;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+    
+    .product-name a:hover {
+        color: #2563eb;
+    }
+    
+    /* Rating Stars */
+    .rating {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        margin-bottom: 10px;
+    }
+    
+    .star {
+        color: #f59e0b;
+        font-size: 0.9rem;
+    }
+    
+    .rating-count {
+        color: #64748b;
+        font-size: 0.8rem;
+        margin-left: 5px;
+    }
+    
+    /* Price */
+    .price-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .current-price {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #2563eb;
+    }
+    
+    .old-price {
+        color: #94a3b8;
+        text-decoration: line-through;
+        font-size: 0.9rem;
+    }
+    
+    .discount-badge {
+        background: #fee2e2;
+        color: #ef4444;
+        padding: 2px 8px;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+    
+    /* Stock Status */
+    .stock-status {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.8rem;
+        margin-bottom: 15px;
+    }
+    
+    .in-stock {
+        color: #10b981;
+    }
+    
+    .low-stock {
+        color: #f59e0b;
+    }
+    
+    .out-of-stock {
+        color: #ef4444;
+    }
+    
+    /* Add to Cart Button */
+    .add-to-cart-btn {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .add-to-cart-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
+    }
+    
+    .add-to-cart-btn:disabled {
+        background: #cbd5e1;
+        cursor: not-allowed;
+    }
+    
+    /* Card Footer */
+    .card-footer {
+        background: transparent;
+        border-top: 1px solid #e2e8f0;
+        padding: 15px 20px;
+        display: flex;
+        gap: 10px;
+    }
+    
+    .details-btn {
+        flex: 1;
+        padding: 8px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        color: #1e293b;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        transition: all 0.3s;
+    }
+    
+    .details-btn:hover {
+        background: #2563eb;
+        color: white;
+        border-color: #2563eb;
+    }
+    
+    .compare-btn {
+        width: 40px;
+        height: 40px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        color: #64748b;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .compare-btn:hover {
+        background: #2563eb;
+        color: white;
+        border-color: #2563eb;
+    }
+    
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    }
+    
+    .empty-state i {
+        font-size: 4rem;
+        color: #cbd5e1;
+        margin-bottom: 20px;
+    }
+    
+    .empty-state h3 {
+        font-size: 1.5rem;
+        color: #1e293b;
+        margin-bottom: 10px;
+    }
+    
+    .empty-state p {
+        color: #64748b;
+        margin-bottom: 20px;
+    }
+    
+    .empty-state .btn {
+        padding: 12px 30px;
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s;
+    }
+    
+    .empty-state .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+    }
+    
+    /* Pagination */
+    .pagination {
+        margin-top: 50px;
+        justify-content: center;
+        gap: 5px;
+    }
+    
+    .page-item .page-link {
+        border: none;
+        padding: 10px 15px;
+        border-radius: 10px;
+        color: #1e293b;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+    
+    .page-item.active .page-link {
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        color: white;
+    }
+    
+    .page-item .page-link:hover {
+        background: #eef2ff;
+        color: #2563eb;
+    }
+    
+    /* Modal Styling */
+    .modal-content {
+        border: none;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+    
+    .modal-header {
+        border: none;
+        padding: 20px 20px 0;
+    }
+    
+    .modal-header .btn-close {
+        background: #f1f5f9;
+        padding: 10px;
+        border-radius: 50%;
+    }
+    
+    /* Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    .product-card {
+        animation: fadeInUp 0.6s ease backwards;
+    }
+    
+    {% for product in products %}
+    .product-card:nth-child({{ forloop.counter }}) {
+        animation-delay: {{ forloop.counter0|add:"0.1" }}s;
+    }
+    {% endfor %}
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .page-header h1 {
+            font-size: 2.2rem;
+        }
+        
+        .filter-bar {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .filter-actions {
+            width: 100%;
+            justify-content: space-between;
+        }
+        
+        .product-image-wrapper {
+            aspect-ratio: 4 / 3;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header with Gradient -->
+<div class="page-header">
+    <div class="container">
+        <div class="breadcrumb-custom">
+            <a href="{% url 'home' %}"><i class="bi bi-house-door me-1"></i>Home</a>
+            <span class="separator">/</span>
+            <span class="active">Featured Products</span>
+        </div>
+        <h1>Featured Products</h1>
+        <p>Discover our handpicked selection of premium products, just for you</p>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+        <div class="results-count">
+            <i class="bi bi-grid-3x3-gap-fill me-2"></i>
+            Showing <span>{{ products|length }}</span> featured products
+        </div>
+        
+        <div class="filter-actions">
+            <!-- Sort Dropdown -->
+            <div class="sort-dropdown">
+                <button class="sort-btn" onclick="toggleSortMenu()">
+                    <i class="bi bi-arrow-down-up"></i>
+                    Sort by
+                    <i class="bi bi-chevron-down ms-2"></i>
+                </button>
+                <div class="sort-menu" id="sortMenu">
+                    <div class="sort-item" data-sort="popular">Most Popular</div>
+                    <div class="sort-item" data-sort="newest">Newest First</div>
+                    <div class="sort-item" data-sort="price_low">Price: Low to High</div>
+                    <div class="sort-item" data-sort="price_high">Price: High to Low</div>
+                    <div class="sort-item" data-sort="rating">Top Rated</div>
+                </div>
+            </div>
+            
+            <!-- View Toggle -->
+            <div class="view-toggle">
+                <button class="view-btn active" data-view="grid" title="Grid View">
+                    <i class="bi bi-grid-3x3-gap-fill"></i>
+                </button>
+                <button class="view-btn" data-view="list" title="List View">
+                    <i class="bi bi-list"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="row g-4" id="products-grid">
+        {% for product in products %}
+        <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="product-card">
+                <!-- Product Badges -->
+                <div class="product-badges">
+                    {% if product.is_new %}
+                    <span class="badge badge-new">New</span>
+                    {% endif %}
+                    {% if product.get_discount_percentage > 0 %}
+                    <span class="badge badge-sale">-{{ product.get_discount_percentage }}%</span>
+                    {% endif %}
+                    {% if product.is_featured and not forloop.first %}
+                    <span class="badge badge-featured">Featured</span>
+                    {% endif %}
+                </div>
+
+                <!-- Wishlist Button -->
+                <button class="wishlist-btn" onclick="toggleWishlist(this)" data-product-id="{{ product.id }}">
+                    <i class="bi bi-heart"></i>
+                </button>
+
+                <!-- Product Image -->
+                <div class="product-image-wrapper">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" 
+                         class="product-image" 
+                         alt="{{ product.name }}"
+                         loading="lazy">
+                    {% else %}
+                    <img src="{% static 'images/placeholder.jpg' %}" 
+                         class="product-image" 
+                         alt="{{ product.name }}">
+                    {% endif %}
+                    
+                    <!-- Quick View Overlay -->
+                    <div class="quick-view-overlay">
+                        <button class="quick-view-btn" onclick="quickView('{{ product.slug }}')">
+                            <i class="bi bi-eye me-2"></i>Quick View
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product Info -->
+                <div class="product-info">
+                    <div class="product-category">{{ product.category.name|default:"Uncategorized" }}</div>
+                    
+                    <h3 class="product-name">
+                        <a href="{% url 'product_detail' product.slug %}">{{ product.name|truncatechars:40 }}</a>
+                    </h3>
+
+                    <!-- Rating -->
+                    {% if product.average_rating %}
+                    <div class="rating">
+                        {% for i in "12345"|make_list %}
+                            {% if forloop.counter <= product.average_rating %}
+                            <i class="bi bi-star-fill star"></i>
+                            {% elif forloop.counter <= product.average_rating|add:"0.5" %}
+                            <i class="bi bi-star-half star"></i>
+                            {% else %}
+                            <i class="bi bi-star star"></i>
+                            {% endif %}
+                        {% endfor %}
+                        <span class="rating-count">({{ product.reviews_count }})</span>
+                    </div>
+                    {% endif %}
+
+                    <!-- Price -->
+                    <div class="price-wrapper">
+                        {% if product.discounted_price and product.discounted_price < product.price %}
+                        <span class="current-price">${{ product.discounted_price|floatformat:2|intcomma }}</span>
+                        <span class="old-price">${{ product.price|floatformat:2|intcomma }}</span>
+                        <span class="discount-badge">-{{ product.get_discount_percentage }}%</span>
+                        {% else %}
+                        <span class="current-price">${{ product.price|floatformat:2|intcomma }}</span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Stock Status -->
+                    <div class="stock-status">
+                        {% if product.stock_quantity > 0 %}
+                            {% if product.stock_quantity < 10 %}
+                            <i class="bi bi-exclamation-triangle-fill low-stock"></i>
+                            <span class="low-stock">Only {{ product.stock_quantity }} left in stock</span>
+                            {% else %}
+                            <i class="bi bi-check-circle-fill in-stock"></i>
+                            <span class="in-stock">In Stock</span>
+                            {% endif %}
+                        {% else %}
+                        <i class="bi bi-x-circle-fill out-of-stock"></i>
+                        <span class="out-of-stock">Out of Stock</span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Add to Cart Button -->
+                    {% if product.stock_quantity > 0 %}
+                    <button class="add-to-cart-btn" onclick="addToCart('{{ product.id }}')">
+                        <i class="bi bi-cart-plus"></i>
+                        Add to Cart
+                    </button>
+                    {% else %}
+                    <button class="add-to-cart-btn" disabled>
+                        <i class="bi bi-cart-x"></i>
+                        Out of Stock
+                    </button>
+                    {% endif %}
+                </div>
+
+                <!-- Card Footer -->
+                <div class="card-footer">
+                    <a href="{% url 'product_detail' product.slug %}" class="details-btn">
+                        <i class="bi bi-info-circle"></i>
+                        Details
+                    </a>
+                    <button class="compare-btn" onclick="addToCompare('{{ product.id }}')" title="Add to Compare">
+                        <i class="bi bi-arrow-left-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="empty-state">
+                <i class="bi bi-box"></i>
+                <h3>No Featured Products Found</h3>
+                <p>Check back later for new featured products or browse all products</p>
+                <a href="{% url 'product_list' %}" class="btn">Browse All Products</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if products.has_other_pages %}
+    <nav>
+        <ul class="pagination">
+            {% if products.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ products.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% for i in products.paginator.page_range %}
+                {% if products.number == i %}
+                <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+                {% elif i > products.number|add:'-3' and i < products.number|add:'3' %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ i }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}">{{ i }}</a>
+                </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if products.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ products.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+<!-- Quick View Modal -->
+<div class="modal fade" id="quickViewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="quickViewContent">
+                <!-- Quick view content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <i class="bi bi-check-circle-fill text-success me-2"></i>
+            <strong class="me-auto">Hamzify</strong>
+            <small>just now</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body" id="toastMessage">
+            Product added to cart successfully!
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Toggle Sort Menu
+    function toggleSortMenu() {
+        document.getElementById('sortMenu').classList.toggle('show');
+    }
+    
+    // Close sort menu when clicking outside
+    window.onclick = function(event) {
+        if (!event.target.matches('.sort-btn')) {
+            var dropdowns = document.getElementsByClassName('sort-menu');
+            for (var i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+    
+    // Sort items
+    document.querySelectorAll('.sort-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const sortValue = this.dataset.sort;
+            const url = new URL(window.location.href);
+            url.searchParams.set('sort', sortValue);
+            window.location.href = url.toString();
+        });
+    });
+    
+    // Set active sort item
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentSort = urlParams.get('sort') || 'popular';
+    document.querySelectorAll('.sort-item').forEach(item => {
+        if (item.dataset.sort === currentSort) {
+            item.classList.add('active');
+        }
+    });
+    
+    // Wishlist functionality
+    function toggleWishlist(button) {
+        button.classList.toggle('active');
+        const icon = button.querySelector('i');
+        
+        {% if user.is_authenticated %}
+        if (button.classList.contains('active')) {
+            icon.classList.remove('bi-heart');
+            icon.classList.add('bi-heart-fill');
+            showNotification('Added to wishlist!', 'success');
+            
+            // Save to database
+            fetch('/api/wishlist/add/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    product_id: button.dataset.productId
+                })
+            });
+        } else {
+            icon.classList.remove('bi-heart-fill');
+            icon.classList.add('bi-heart');
+            showNotification('Removed from wishlist!', 'info');
+            
+            // Remove from database
+            fetch('/api/wishlist/remove/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    product_id: button.dataset.productId
+                })
+            });
+        }
+        {% else %}
+        showNotification('Please login to add items to wishlist', 'warning');
+        setTimeout(() => {
+            window.location.href = '{% url "login" %}';
+        }, 2000);
+        {% endif %}
+    }
+
+    // Add to cart
+    function addToCart(productId) {
+        {% if user.is_authenticated %}
+        const button = event.target.closest('button');
+        const originalText = button.innerHTML;
+        
+        button.innerHTML = '<i class="bi bi-check-lg"></i> Adding...';
+        button.disabled = true;
+        
+        fetch('/api/cart/add/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                product_id: productId,
+                quantity: 1
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                button.innerHTML = '<i class="bi bi-check-lg"></i> Added!';
+                showNotification('Product added to cart!', 'success');
+                updateCartCounter(data.cart_count);
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }, 2000);
+            } else {
+                button.innerHTML = originalText;
+                button.disabled = false;
+                showNotification(data.message || 'Failed to add product', 'error');
+            }
+        })
+        .catch(error => {
+            button.innerHTML = originalText;
+            button.disabled = false;
+            showNotification('Failed to add product', 'error');
+        });
+        {% else %}
+        showNotification('Please login to add items to cart', 'warning');
+        setTimeout(() => {
+            window.location.href = '{% url "login" %}';
+        }, 2000);
+        {% endif %}
+    }
+
+    // Quick view
+    function quickView(productSlug) {
+        const modal = new bootstrap.Modal(document.getElementById('quickViewModal'));
+        
+        fetch(`/api/quick-view/${productSlug}/`)
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('quickViewContent').innerHTML = html;
+                modal.show();
+            })
+            .catch(error => {
+                showNotification('Failed to load product details', 'error');
+            });
+    }
+
+    // Add to compare
+    function addToCompare(productId) {
+        let compareList = JSON.parse(localStorage.getItem('compareList') || '[]');
+        
+        if (!compareList.includes(productId)) {
+            if (compareList.length >= 4) {
+                showNotification('You can compare up to 4 products', 'warning');
+                return;
+            }
+            
+            compareList.push(productId);
+            localStorage.setItem('compareList', JSON.stringify(compareList));
+            showNotification('Added to compare!', 'success');
+            
+            // Update compare counter if exists
+            const compareCounter = document.getElementById('compare-counter');
+            if (compareCounter) {
+                compareCounter.textContent = compareList.length;
+                compareCounter.style.display = 'inline';
+            }
+        } else {
+            showNotification('Already in compare list', 'info');
+        }
+    }
+
+    // Notification system
+    function showNotification(message, type = 'success') {
+        const toast = document.getElementById('notificationToast');
+        const toastBody = document.getElementById('toastMessage');
+        const toastIcon = toast.querySelector('.toast-header i');
+        
+        toastBody.textContent = message;
+        
+        // Set icon based on type
+        toastIcon.className = 'bi me-2';
+        if (type === 'success') {
+            toastIcon.classList.add('bi-check-circle-fill', 'text-success');
+        } else if (type === 'error') {
+            toastIcon.classList.add('bi-exclamation-circle-fill', 'text-danger');
+        } else if (type === 'warning') {
+            toastIcon.classList.add('bi-exclamation-triangle-fill', 'text-warning');
+        } else {
+            toastIcon.classList.add('bi-info-circle-fill', 'text-info');
+        }
+        
+        const bsToast = new bootstrap.Toast(toast);
+        bsToast.show();
+    }
+
+    // Update cart counter
+    function updateCartCounter(count) {
+        const cartCounter = document.getElementById('cart-counter');
+        if (cartCounter) {
+            cartCounter.textContent = count;
+            cartCounter.style.display = count > 0 ? 'inline' : 'none';
+        }
+    }
+
+    // View toggle (grid/list)
+    document.querySelectorAll('[data-view]').forEach(button => {
+        button.addEventListener('click', function() {
+            // Update active state
+            document.querySelectorAll('[data-view]').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            this.classList.add('active');
+            
+            const productsGrid = document.getElementById('products-grid');
+            const view = this.dataset.view;
+            
+            if (view === 'list') {
+                productsGrid.classList.add('list-view');
+                productsGrid.querySelectorAll('.col-xl-3, .col-lg-4, .col-md-6').forEach(col => {
+                    col.className = 'col-12';
+                });
+            } else {
+                productsGrid.classList.remove('list-view');
+                productsGrid.querySelectorAll('.col-12').forEach(col => {
+                    col.className = 'col-xl-3 col-lg-4 col-md-6';
+                });
+            }
+        });
+    });
+
+    // Load wishlist status on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        {% if user.is_authenticated %}
+        fetch('/api/wishlist/')
+            .then(response => response.json())
+            .then(data => {
+                data.wishlist_items.forEach(itemId => {
+                    const btn = document.querySelector(`[data-product-id="${itemId}"]`);
+                    if (btn) {
+                        btn.classList.add('active');
+                        btn.querySelector('i').classList.remove('bi-heart');
+                        btn.querySelector('i').classList.add('bi-heart-fill');
+                    }
+                });
+            });
+        {% endif %}
+    });
+</script>
+{% endblock %}

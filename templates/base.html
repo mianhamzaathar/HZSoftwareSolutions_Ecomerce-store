@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hamzify - Your premier online shopping destination for quality products">
+    <meta name="keywords" content="hamzify, ecommerce, shop, online store, products">
+    <meta name="author" content="Hamzify">
+    
+    <title>{% block title %}Hamzify - Premium E-Commerce Store{% endblock %}</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-content {
+            flex: 1;
+        }
+        
+        /* Brand Colors */
+        :root {
+            --hamzify-primary: #2563eb;
+            --hamzify-secondary: #7c3aed;
+            --hamzify-accent: #f59e0b;
+            --hamzify-dark: #1e293b;
+            --hamzify-light: #f1f5f9;
+        }
+        
+        /* Conditional Navbar Styles */
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.8rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 50%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+        
+        .navbar-brand i {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-right: 8px;
+        }
+        
+        .navbar-dark .navbar-brand {
+            -webkit-text-fill-color: white;
+            background: none;
+        }
+        
+        .navbar-dark .navbar-brand i {
+            -webkit-text-fill-color: white;
+        }
+        
+        .nav-btn {
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 0 5px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .nav-btn-outline {
+            border: 2px solid rgba(255,255,255,0.2);
+            color: white;
+            background: transparent;
+        }
+        
+        .nav-btn-outline:hover {
+            border-color: #f59e0b;
+            color: #f59e0b;
+            transform: translateY(-2px);
+            background: rgba(245, 158, 11, 0.1);
+        }
+        
+        .nav-btn-primary {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+        
+        .nav-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+            color: white;
+        }
+        
+        .nav-btn-warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+        
+        .nav-btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+            color: white;
+        }
+        
+        .nav-btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+        
+        .nav-btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+            color: white;
+        }
+        
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 11px;
+            font-weight: 600;
+            min-width: 18px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        /* Hero Section for non-authenticated users */
+        .hero-section {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 50%, #f59e0b 100%);
+            padding: 5rem 0;
+            margin-top: -1.5rem;
+            margin-bottom: 3rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-repeat: no-repeat;
+            background-position: bottom;
+            opacity: 0.1;
+            animation: wave 10s linear infinite;
+        }
+        
+        @keyframes wave {
+            0% { background-position: bottom; }
+            50% { background-position: bottom 20px right; }
+            100% { background-position: bottom; }
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .hero-title span {
+            background: linear-gradient(135deg, #fff 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+        
+        /* Feature Cards */
+        .feature-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.3);
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #f59e0b;
+        }
+        
+        /* Category Cards */
+        .category-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.1);
+        }
+        
+        .category-card i {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .category-card:hover i {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Welcome Banner */
+        .welcome-banner {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            color: white;
+            padding: 0.75rem 0;
+            border-bottom: 3px solid #f59e0b;
+        }
+        
+        /* Footer */
+        .footer {
+            background: #0f172a;
+            color: white;
+            padding: 3rem 0 1.5rem;
+            margin-top: 4rem;
+            position: relative;
+        }
+        
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #2563eb, #7c3aed, #f59e0b);
+        }
+        
+        .footer-brand {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 50%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+        
+        .footer-links li {
+            display: inline-block;
+            margin: 0 1rem;
+        }
+        
+        .footer-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .footer-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #2563eb, #7c3aed, #f59e0b);
+            transition: width 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .footer-links a:hover::after {
+            width: 100%;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            color: white;
+            margin: 0 5px;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .social-links a:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            
+            .navbar-brand {
+                font-size: 1.5rem;
+            }
+            
+            .nav-btn {
+                margin: 5px 0;
+                display: block;
+                text-align: center;
+            }
+            
+            .footer-links li {
+                display: block;
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- Header section hidden on landing and accounts pages -->
+{% if request.resolver_match.url_name != 'landing' and request.path|slice:":10" != '/accounts/' %}
+<!-- Conditional Navbar - Only shows when user is authenticated -->
+{% if user.is_authenticated %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="/store/">
+            <i class="bi bi-lightning-charge-fill"></i>
+            Hamzify
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Search Bar -->
+            <form class="d-flex mx-auto" action="/search/" method="GET" style="width: 350px;">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="Search products..." 
+                           value="{{ request.GET.q }}" style="border-radius: 50px 0 0 50px;">
+                    <button class="btn" type="submit" style="background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); color: white; border-radius: 0 50px 50px 0;">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </form>
+            
+            <!-- Navigation Buttons -->
+            <div class="navbar-nav ms-auto">
+                <div class="d-flex align-items-center">
+                    <a href="/store/" class="nav-btn nav-btn-outline me-2">
+                        <i class="bi bi-house-door"></i>
+                        <span class="d-none d-md-inline">Home</span>
+                    </a>
+                    
+                    <a href="/cart/" class="nav-btn nav-btn-warning me-2 position-relative">
+                        <i class="bi bi-cart3"></i>
+                        <span class="d-none d-md-inline">Cart</span>
+                        <span class="cart-badge" id="cart-counter">0</span>
+                    </a>
+                    
+                    <div class="dropdown">
+                        <button class="nav-btn nav-btn-outline dropdown-toggle" type="button" 
+                                data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i>
+                            <span>{{ user.username|truncatechars:10 }}</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" href="/profile/">
+                                    <i class="bi bi-person me-2" style="color: #2563eb;"></i>Profile
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/orders/">
+                                    <i class="bi bi-box me-2" style="color: #7c3aed;"></i>My Orders
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/wishlist/">
+                                    <i class="bi bi-heart me-2" style="color: #f59e0b;"></i>Wishlist
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form method="post" action="{% url 'logout' %}" class="m-0">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item text-danger">
+                                        <i class="bi bi-box-arrow-right me-2"></i>Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Welcome Banner for Authenticated Users -->
+<div class="welcome-banner">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <small>
+                    <i class="bi bi-lightning-charge-fill me-1" style="color: #f59e0b;"></i>
+                    Welcome back, <strong>{{ user.username }}</strong>! Ready to continue shopping?
+                </small>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <small>
+                    <i class="bi bi-gift me-1" style="color: #f59e0b;"></i>
+                    Special offers just for you
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<!-- Hero Section for Non-Authenticated Users -->
+<div class="hero-section">
+    <div class="container hero-content">
+        <div class="row justify-content-center text-center">
+            <div class="col-md-8">
+                <h1 class="hero-title">
+                    Welcome to <span>Hamzify</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Your premier online shopping destination. Discover amazing products at unbeatable prices with lightning-fast delivery!
+                </p>
+                <div class="mt-4">
+                    <a href="/accounts/login/" class="btn btn-light btn-lg me-2 px-4 rounded-pill">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                    </a>
+                    <a href="/accounts/register/" class="btn btn-warning btn-lg px-4 rounded-pill" style="background: #f59e0b; border: none;">
+                        <i class="bi bi-person-plus me-2"></i>Register
+                    </a>
+                </div>
+                
+                <!-- Quick Features -->
+                <div class="row mt-5 pt-3 g-3">
+                    <div class="col-md-4">
+                        <div class="feature-card">
+                            <i class="bi bi-lightning-charge-fill feature-icon"></i>
+                            <h6>Lightning Fast</h6>
+                            <p class="small opacity-75">2-3 day delivery</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="feature-card">
+                            <i class="bi bi-shield-check feature-icon"></i>
+                            <h6>Secure Payments</h6>
+                            <p class="small opacity-75">100% protected</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="feature-card">
+                            <i class="bi bi-arrow-repeat feature-icon"></i>
+                            <h6>Easy Returns</h6>
+                            <p class="small opacity-75">30-day guarantee</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Featured Categories for Non-Authenticated Users -->
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-12 text-center mb-4">
+            <h2 class="fw-bold" style="color: #1e293b;">Shop by Category</h2>
+            <p class="text-muted">Explore our wide range of products</p>
+        </div>
+    </div>
+    <div class="row g-3 justify-content-center">
+        <div class="col-md-2 col-4">
+            <div class="category-card text-center">
+                <i class="bi bi-phone"></i>
+                <p class="mb-0 fw-semibold">Electronics</p>
+            </div>
+        </div>
+        <div class="col-md-2 col-4">
+            <div class="category-card text-center">
+                <i class="bi bi-tag"></i>
+                <p class="mb-0 fw-semibold">Fashion</p>
+            </div>
+        </div>
+        <div class="col-md-2 col-4">
+            <div class="category-card text-center">
+                <i class="bi bi-house"></i>
+                <p class="mb-0 fw-semibold">Home</p>
+            </div>
+        </div>
+        <div class="col-md-2 col-4">
+            <div class="category-card text-center">
+                <i class="bi bi-book"></i>
+                <p class="mb-0 fw-semibold">Books</p>
+            </div>
+        </div>
+        <div class="col-md-2 col-4">
+            <div class="category-card text-center">
+                <i class="bi bi-bicycle"></i>
+                <p class="mb-0 fw-semibold">Sports</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endif %}
+
+<!-- Main Content Area -->
+{% if request.resolver_match.url_name == 'landing' %}
+<div class="main-content">
+{% else %}
+<div class="container mt-4 main-content">
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-pill" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    {% endif %}
+{% endif %}
+    {% block content %}
+    {% endblock %}
+</div>
+
+<!-- Footer (shows for all users) -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 text-center text-md-start">
+                <div class="footer-brand">
+                    <i class="bi bi-lightning-charge-fill"></i>
+                    Hamzify
+                </div>
+                <p class="text-secondary">Your premier online shopping destination</p>
+                <div class="social-links">
+                    <a href="#"><i class="bi bi-facebook"></i></a>
+                    <a href="#"><i class="bi bi-twitter"></i></a>
+                    <a href="#"><i class="bi bi-instagram"></i></a>
+                    <a href="#"><i class="bi bi-linkedin"></i></a>
+                    <a href="#"><i class="bi bi-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="col-md-8">
+                <ul class="footer-links text-center text-md-end">
+                    <li><a href="/about/">About Us</a></li>
+                    <li><a href="/contact/">Contact</a></li>
+                    <li><a href="/privacy/">Privacy Policy</a></li>
+                    <li><a href="/terms/">Terms of Use</a></li>
+                    {% if not user.is_authenticated %}
+                    <li><a href="/accounts/login/">Login</a></li>
+                    <li><a href="/accounts/register/">Register</a></li>
+                    {% endif %}
+                </ul>
+                <div class="text-center text-md-end mt-3">
+                    <small class="text-secondary">
+                        <i class="bi bi-envelope me-1"></i> support@hamzify.com
+                    </small>
+                    <small class="text-secondary ms-3">
+                        <i class="bi bi-telephone me-1"></i> 1-800-HAMZIFY
+                    </small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="copyright text-center">
+            <p class="mb-0">
+                &copy; {% now "Y" %} Hamzify. All rights reserved. | 
+                <i class="bi bi-lightning-charge-fill" style="color: #f59e0b;"></i> 
+                Powered by Hamzify Technologies
+            </p>
+        </div>
+    </div>
+</footer>
+
+<!-- Toast Notification Container -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="notificationToast" class="toast" role="alert">
+        <div class="toast-header">
+            <i class="bi bi-lightning-charge-fill me-2" style="color: #f59e0b;"></i>
+            <strong class="me-auto">Hamzify</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body" id="toastMessage"></div>
+    </div>
+</div>
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Common JavaScript -->
+<script>
+    // Update cart counter on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        {% if user.is_authenticated %}
+        updateCartCounter();
+        {% endif %}
+    });
+    
+    // Function to update cart counter
+    function updateCartCounter() {
+        fetch('/api/cart/count/')
+            .then(response => response.json())
+            .then(data => {
+                const cartCounter = document.getElementById('cart-counter');
+                if (cartCounter) {
+                    cartCounter.textContent = data.count;
+                    cartCounter.style.display = data.count > 0 ? 'inline' : 'none';
+                }
+            })
+            .catch(error => console.error('Error updating cart counter:', error));
+    }
+    
+    // Notification system
+    function showNotification(message, type = 'info') {
+        const toast = document.getElementById('notificationToast');
+        const toastBody = document.getElementById('toastMessage');
+        const toastIcon = toast.querySelector('.toast-header i');
+        
+        toastBody.textContent = message;
+        
+        // Set icon based on type
+        toastIcon.className = 'bi me-2';
+        if (type === 'success') {
+            toastIcon.classList.add('bi-check-circle-fill', 'text-success');
+        } else if (type === 'error') {
+            toastIcon.classList.add('bi-exclamation-circle-fill', 'text-danger');
+        } else if (type === 'warning') {
+            toastIcon.classList.add('bi-exclamation-triangle-fill', 'text-warning');
+        } else {
+            toastIcon.classList.add('bi-lightning-charge-fill');
+            toastIcon.style.color = '#f59e0b';
+        }
+        
+        const bsToast = new bootstrap.Toast(toast);
+        bsToast.show();
+    }
+    
+    // CSRF token helper
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    // Add to cart function
+    function addToCart(productId, quantity = 1) {
+        {% if user.is_authenticated %}
+        fetch('/api/cart/add/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                product_id: productId,
+                quantity: quantity
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification('Product added to cart!', 'success');
+                updateCartCounter();
+            } else {
+                showNotification(data.message || 'Failed to add product', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('An error occurred', 'error');
+        });
+        {% else %}
+        showNotification('Please login to add items to cart', 'warning');
+        setTimeout(() => {
+            window.location.href = '/accounts/login/';
+        }, 2000);
+        {% endif %}
+    }
+</script>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>
