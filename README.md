@@ -2,8 +2,9 @@
 
 A Django-based ecommerce web application with product catalog, cart, wishlist, profile, orders, and payment flow.
 
+
 ## UI Preview
-!pic.png
+![UI Preview](pic.png)
 
 ## Tech Stack
 - Python 3.10+
