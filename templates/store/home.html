@@ -6,6 +6,7 @@
 
 {% block extra_css %}
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Sora:wght@500;600;700&display=swap');
     /* Page Header with Gradient */
     .page-header {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -482,7 +483,7 @@
         background: #cbd5e1;
         cursor: not-allowed;
     }
-    
+
     /* Card Footer */
     .card-footer {
         background: transparent;
@@ -669,6 +670,244 @@
             aspect-ratio: 4 / 3;
         }
     }
+
+    /* Advanced theme overrides (v2 - cleaner light look) */
+    :root {
+        --hz-bg: #f1f5f9;
+        --hz-surface: #ffffff;
+        --hz-primary: #0f766e;
+        --hz-secondary: #0ea5e9;
+        --hz-accent: #f97316;
+        --hz-ink: #0f172a;
+        --hz-muted: #64748b;
+    }
+
+    body {
+        background:
+            radial-gradient(circle at 95% -10%, rgba(14, 165, 233, 0.12), transparent 50%),
+            radial-gradient(circle at -10% 20%, rgba(15, 118, 110, 0.08), transparent 45%),
+            var(--hz-bg);
+        font-family: 'Manrope', sans-serif;
+    }
+
+
+    .page-header {
+        border-radius: 24px;
+        background-image: linear-gradient(rgba(15, 23, 42, 0.55), rgba(15, 23, 42, 0.55)), url('https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=1800&q=80');
+        background-size: cover;
+        background-position: center;
+        border: 1px solid #dbeafe;
+        box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+        margin: 22px 0 20px;
+        padding: 34px 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .page-header .container {
+        position: relative;
+        z-index: 2;
+    }
+
+    .page-header h1 {
+        font-family: 'Sora', sans-serif;
+        letter-spacing: -0.6px;
+        color: #ffffff;
+        text-shadow: none;
+        font-size: 2.6rem;
+        margin-bottom: 6px;
+    }
+
+    .page-header p {
+        color: #e2e8f0;
+        font-size: 1.05rem;
+    }
+
+    .hero-layout {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .hero-media {
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid #cbd5e1;
+        background-image: linear-gradient(rgba(15, 23, 42, 0.18), rgba(15, 23, 42, 0.18)), url('https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=1400&q=80');
+        background-size: cover;
+        background-position: center;
+        box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+        position: relative;
+        min-height: 230px;
+    }
+
+    .hero-media-badge {
+        position: absolute;
+        left: 12px;
+        bottom: 12px;
+        background: rgba(15, 23, 42, 0.8);
+        color: #fff;
+        border-radius: 999px;
+        padding: 7px 12px;
+        font-size: 0.8rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .breadcrumb-custom {
+        background: rgba(255, 255, 255, 0.14);
+        border: 1px solid rgba(255, 255, 255, 0.35);
+    }
+
+    .breadcrumb-custom a,
+    .breadcrumb-custom .separator,
+    .breadcrumb-custom .active {
+        color: #ffffff;
+    }
+
+    .home-insights {
+        margin-top: 0;
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .insight-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 14px;
+    }
+
+    .insight-card {
+        background: var(--hz-surface);
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+        padding: 18px 20px;
+    }
+
+    .insight-main h4 {
+        margin: 0 0 6px;
+        font-family: 'Sora', sans-serif;
+        color: var(--hz-ink);
+    }
+
+    .insight-main p {
+        margin: 0;
+        color: var(--hz-muted);
+        font-size: 0.95rem;
+    }
+
+    .metric-num {
+        font-size: 1.7rem;
+        font-weight: 800;
+        color: var(--hz-ink);
+        line-height: 1.1;
+    }
+
+    .metric-label {
+        font-size: 0.82rem;
+        color: var(--hz-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+    }
+
+    .category-ribbon {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        margin-bottom: 22px;
+    }
+
+    .category-pill {
+        flex: 0 0 auto;
+        padding: 9px 14px;
+        border-radius: 999px;
+        background: #ffffff;
+        color: #0f172a;
+        border: 1px solid #cbd5e1;
+        font-size: 0.85rem;
+        text-decoration: none;
+        font-weight: 700;
+        transition: all 0.25s ease;
+    }
+
+    .category-pill:hover {
+        background: var(--hz-primary);
+        border-color: var(--hz-primary);
+        color: #fff;
+        transform: translateY(-2px);
+    }
+
+    .filter-bar {
+        border-radius: 18px;
+        border: 1px solid #dbeafe;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.07);
+    }
+
+    .results-count span {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .sort-btn,
+    .view-toggle {
+        border-color: #cbd5e1;
+        background: #f8fafc;
+    }
+
+    .view-btn.active {
+        background: var(--hz-primary);
+    }
+
+    .product-card {
+        border-radius: 18px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+    }
+
+    .product-card:hover {
+        box-shadow: 0 18px 40px rgba(14, 116, 144, 0.2);
+    }
+
+    .product-image-wrapper {
+        background:
+            radial-gradient(circle at 20% 20%, rgba(14, 165, 233, 0.22), transparent 50%),
+            radial-gradient(circle at 75% 70%, rgba(15, 118, 110, 0.2), transparent 50%),
+            #f8fafc;
+    }
+
+    .product-name a:hover {
+        color: var(--hz-primary);
+    }
+
+    .current-price {
+        color: var(--hz-primary);
+    }
+
+    .add-to-cart-btn {
+        background: linear-gradient(135deg, var(--hz-primary), var(--hz-secondary));
+    }
+
+    .add-to-cart-btn:hover:not(:disabled) {
+        box-shadow: 0 12px 26px rgba(14, 116, 144, 0.35);
+    }
+
+    .details-btn:hover,
+    .compare-btn:hover {
+        background: var(--hz-primary);
+        border-color: var(--hz-primary);
+    }
+
+    @media (max-width: 991px) {
+        .insight-grid {
+            grid-template-columns: 1fr;
+        }
+        .hero-layout {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -676,17 +915,44 @@
 <!-- Page Header with Gradient -->
 <div class="page-header">
     <div class="container">
-        <div class="breadcrumb-custom">
-            <a href="{% url 'home' %}"><i class="bi bi-house-door me-1"></i>Home</a>
-            <span class="separator">/</span>
-            <span class="active">Featured Products</span>
+        <div class="hero-layout">
+            <div>
+                <div class="breadcrumb-custom">
+                    <a href="{% url 'home' %}"><i class="bi bi-house-door me-1"></i>Home</a>
+                    <span class="separator">/</span>
+                    <span class="active">Featured Products</span>
+                </div>
+                <h1>Featured Products</h1>
+                <p>Discover our handpicked selection of premium products, just for you</p>
+            </div>
         </div>
-        <h1>Featured Products</h1>
-        <p>Discover our handpicked selection of premium products, just for you</p>
     </div>
 </div>
 
 <div class="container mb-5">
+    <div class="home-insights">
+        <div class="insight-grid">
+            <div class="insight-card insight-main">
+                <h4>Curated Picks For You</h4>
+                <p>Trending products, verified quality, and fast nationwide delivery in Pakistan.</p>
+            </div>
+            <div class="insight-card">
+                <div class="metric-num">{{ products|length }}</div>
+                <div class="metric-label">Featured Items</div>
+            </div>
+            <div class="insight-card">
+                <div class="metric-num">{{ categories|length }}</div>
+                <div class="metric-label">Live Categories</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="category-ribbon">
+        {% for category in categories %}
+        <a href="{% url 'category_products' category.slug %}" class="category-pill">{{ category.name }}</a>
+        {% endfor %}
+    </div>
+
     <!-- Filter Bar -->
     <div class="filter-bar">
         <div class="results-count">
@@ -794,11 +1060,11 @@
                     <!-- Price -->
                     <div class="price-wrapper">
                         {% if product.discounted_price and product.discounted_price < product.price %}
-                        <span class="current-price">${{ product.discounted_price|floatformat:2|intcomma }}</span>
-                        <span class="old-price">${{ product.price|floatformat:2|intcomma }}</span>
+                        <span class="current-price">Rs. {{ product.discounted_price|floatformat:2|intcomma }}</span>
+                        <span class="old-price">Rs. {{ product.price|floatformat:2|intcomma }}</span>
                         <span class="discount-badge">-{{ product.get_discount_percentage }}%</span>
                         {% else %}
-                        <span class="current-price">${{ product.price|floatformat:2|intcomma }}</span>
+                        <span class="current-price">Rs. {{ product.price|floatformat:2|intcomma }}</span>
                         {% endif %}
                     </div>
 
@@ -820,7 +1086,7 @@
 
                     <!-- Add to Cart Button -->
                     {% if product.stock_quantity > 0 %}
-                    <button class="add-to-cart-btn" onclick="addToCart('{{ product.id }}')">
+                    <button class="add-to-cart-btn" onclick="addToCart(this, '{{ product.id }}')">
                         <i class="bi bi-cart-plus"></i>
                         Add to Cart
                     </button>
@@ -1007,9 +1273,8 @@
     }
 
     // Add to cart
-    function addToCart(productId) {
+    function addToCart(button, productId) {
         {% if user.is_authenticated %}
-        const button = event.target.closest('button');
         const originalText = button.innerHTML;
         
         button.innerHTML = '<i class="bi bi-check-lg"></i> Adding...';

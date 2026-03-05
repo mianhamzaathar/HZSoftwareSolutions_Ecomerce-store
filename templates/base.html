@@ -379,6 +379,236 @@
                 margin: 0.5rem 0;
             }
         }
+
+        /* Global Modern Overrides (site-wide) */
+        :root {
+            --hz-bg: #edf2f7;
+            --hz-surface: #ffffff;
+            --hz-border: #dbe7f3;
+            --hz-text: #0f172a;
+            --hz-muted: #64748b;
+            --hz-brand-1: #0f766e;
+            --hz-brand-2: #0ea5e9;
+        }
+
+        body {
+            background:
+                radial-gradient(circle at 100% -5%, rgba(14,165,233,0.12), transparent 45%),
+                radial-gradient(circle at -5% 35%, rgba(15,118,110,0.10), transparent 40%),
+                var(--hz-bg);
+            color: var(--hz-text);
+        }
+
+        .container {
+            max-width: 1240px;
+        }
+
+        .navbar {
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 8px 26px rgba(2, 6, 23, 0.25);
+        }
+
+        .site-navbar {
+            background: rgba(255, 255, 255, 0.92) !important;
+            border-bottom: 1px solid #dbe7f3;
+            box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+        }
+
+        .site-navbar .navbar-brand {
+            background: none !important;
+            -webkit-text-fill-color: #0f172a !important;
+            color: #0f172a !important;
+            font-weight: 800;
+        }
+
+        .site-navbar .navbar-brand i {
+            -webkit-text-fill-color: #0f766e !important;
+        }
+
+        .site-navbar .nav-btn {
+            border-radius: 12px;
+            border: 1px solid #d4dee9;
+            background: #ffffff;
+            color: #0f172a;
+            box-shadow: none;
+        }
+
+        .site-navbar .nav-btn:hover {
+            transform: translateY(-1px);
+            border-color: #9fb2c7;
+            color: #0f172a;
+            background: #f8fafc;
+        }
+
+        .site-navbar .nav-btn-warning {
+            background: linear-gradient(135deg, #f59e0b, #f97316);
+            color: #fff;
+            border-color: transparent;
+        }
+
+        .site-navbar .nav-btn-warning:hover {
+            color: #fff;
+            background: linear-gradient(135deg, #ea8a00, #ea580c);
+        }
+
+        .site-navbar .cart-badge {
+            background: #0f766e;
+        }
+
+        .site-search-input {
+            border-radius: 12px 0 0 12px !important;
+            border-right: 0 !important;
+            min-height: 44px;
+        }
+
+        .site-search-btn {
+            border-radius: 0 12px 12px 0 !important;
+            background: linear-gradient(135deg, var(--hz-brand-1), var(--hz-brand-2)) !important;
+            color: #fff !important;
+            border: none !important;
+            min-width: 52px;
+        }
+
+        .welcome-banner {
+            background: #f8fafc;
+            color: #334155;
+            border-bottom: 1px solid #dbe7f3;
+            padding: 0.45rem 0;
+        }
+
+        .main-content > .alert {
+            border-radius: 14px !important;
+            border: 1px solid #cbd5e1;
+        }
+
+        .card {
+            border-radius: 18px !important;
+            border: 1px solid var(--hz-border) !important;
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.07) !important;
+        }
+
+        .card:hover {
+            box-shadow: 0 16px 34px rgba(15, 23, 42, 0.10) !important;
+        }
+
+        .btn {
+            border-radius: 12px !important;
+            font-weight: 600 !important;
+            letter-spacing: 0.2px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--hz-brand-1), var(--hz-brand-2)) !important;
+            border: none !important;
+        }
+
+        .btn-outline-primary {
+            border-color: var(--hz-brand-1) !important;
+            color: var(--hz-brand-1) !important;
+        }
+
+        .btn-outline-primary:hover {
+            background: linear-gradient(135deg, var(--hz-brand-1), var(--hz-brand-2)) !important;
+            border-color: transparent !important;
+            color: #fff !important;
+        }
+
+        .form-control,
+        .form-select,
+        .input-group-text {
+            border-radius: 12px !important;
+            border-color: #cfd8e3 !important;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #0ea5e9 !important;
+            box-shadow: 0 0 0 0.2rem rgba(14,165,233,0.20) !important;
+        }
+
+        .table {
+            --bs-table-bg: #fff;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .table > :not(caption) > * > * {
+            border-color: #e2e8f0;
+        }
+
+        .badge {
+            border-radius: 999px !important;
+        }
+
+        .modal-content {
+            border-radius: 18px !important;
+            border: 1px solid var(--hz-border) !important;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18) !important;
+        }
+
+        .page-header {
+            border-radius: 22px !important;
+            border: 1px solid #cbd5e1 !important;
+            box-shadow: 0 16px 34px rgba(15, 23, 42, 0.12) !important;
+        }
+
+        .footer {
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.08);
+            background: #ffffff;
+            border-top: 1px solid #dbe7f3;
+            color: #0f172a;
+        }
+
+        .footer::before {
+            height: 1px;
+            background: linear-gradient(90deg, #0ea5e9, #cbd5e1, #0f766e);
+        }
+
+        .footer-brand {
+            font-size: 1.9rem;
+            font-weight: 700;
+            letter-spacing: -0.6px;
+            background: linear-gradient(135deg, #0f766e 0%, #0ea5e9 60%, #6366f1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .footer p.text-secondary {
+            color: #64748b !important;
+        }
+
+        .footer-links a {
+            color: #475569;
+            font-weight: 500;
+        }
+
+        .footer-links a:hover {
+            color: #0f766e;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #dbe7f3;
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        .social-links a:hover {
+            background: #0f766e;
+            color: #ffffff;
+            border-color: #0f766e;
+            transform: translateY(-2px);
+        }
+
+        .copyright {
+            color: #64748b;
+            border-top-color: #e2e8f0;
+        }
     </style>
     
     {% block extra_css %}{% endblock %}
@@ -389,7 +619,7 @@
 {% if request.resolver_match.url_name != 'landing' and request.path|slice:":10" != '/accounts/' %}
 <!-- Conditional Navbar - Only shows when user is authenticated -->
 {% if user.is_authenticated %}
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+<nav class="navbar navbar-expand-lg site-navbar sticky-top">
     <div class="container">
         <a class="navbar-brand" href="/store/">
             <i class="bi bi-lightning-charge-fill"></i>
@@ -402,11 +632,11 @@
         
         <div class="collapse navbar-collapse" id="navbarNav">
             <!-- Search Bar -->
-            <form class="d-flex mx-auto" action="/search/" method="GET" style="width: 350px;">
+            <form class="d-flex mx-auto" action="/search/" method="GET" style="width: 380px;">
                 <div class="input-group">
-                    <input type="text" name="q" class="form-control" placeholder="Search products..." 
-                           value="{{ request.GET.q }}" style="border-radius: 50px 0 0 50px;">
-                    <button class="btn" type="submit" style="background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); color: white; border-radius: 0 50px 50px 0;">
+                    <input type="text" name="q" class="form-control site-search-input" placeholder="Search products..." 
+                           value="{{ request.GET.q }}">
+                    <button class="btn site-search-btn" type="submit">
                         <i class="bi bi-search"></i>
                     </button>
                 </div>
@@ -471,13 +701,13 @@
         <div class="row align-items-center">
             <div class="col-md-6">
                 <small>
-                    <i class="bi bi-lightning-charge-fill me-1" style="color: #f59e0b;"></i>
+                    <i class="bi bi-lightning-charge-fill me-1" style="color: #0f766e;"></i>
                     Welcome back, <strong>{{ user.username }}</strong>! Ready to continue shopping?
                 </small>
             </div>
             <div class="col-md-6 text-md-end">
                 <small>
-                    <i class="bi bi-gift me-1" style="color: #f59e0b;"></i>
+                    <i class="bi bi-gift me-1" style="color: #0f766e;"></i>
                     Special offers just for you
                 </small>
             </div>

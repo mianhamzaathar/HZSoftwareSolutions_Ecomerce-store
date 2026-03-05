@@ -1,8 +1,5 @@
-from django.db import models
-
-# Create your models here.
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 from store.models import Product
 
 class Cart(models.Model):
@@ -14,4 +11,5 @@ class CartItem(models.Model):
     quantity = models.IntegerField(default=1)
 
     def total_price(self):
-        return self.product.discounted_price() * self.quantity
+        unit_price = self.product.discounted_price or self.product.price
+        return unit_price * self.quantity

@@ -8,7 +8,9 @@
 <style>
     /* Page Header */
     .page-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background-image: linear-gradient(rgba(15, 23, 42, 0.55), rgba(15, 23, 42, 0.55)), url('https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?auto=format&fit=crop&w=1800&q=80');
+        background-size: cover;
+        background-position: center;
         padding: 40px 0;
         margin-bottom: 40px;
         border-radius: 20px;
@@ -468,9 +470,9 @@
                             </td>
                             <td data-label="Price">
                                 <span class="product-price">
-                                    ${{ item.product.discounted_price|floatformat:2|intcomma }}
+                                    Rs. {{ item.product.discounted_price|floatformat:2|intcomma }}
                                     {% if item.product.price > item.product.discounted_price %}
-                                    <span class="old-price">${{ item.product.price|floatformat:2|intcomma }}</span>
+                                    <span class="old-price">Rs. {{ item.product.price|floatformat:2|intcomma }}</span>
                                     {% endif %}
                                 </span>
                             </td>
@@ -488,7 +490,7 @@
                                 </div>
                             </td>
                             <td data-label="Total" class="product-price">
-                                ${{ item.total_price|floatformat:2|intcomma }}
+                                Rs. {{ item.total_price|floatformat:2|intcomma }}
                             </td>
                             <td data-label="Action">
                                 <button class="remove-btn" onclick="removeItem({{ item.product.id }})" title="Remove item">
@@ -529,29 +531,29 @@
                 <!-- Price Breakdown -->
                 <div class="summary-row">
                     <span>Subtotal</span>
-                    <span class="fw-bold">${{ subtotal|floatformat:2|intcomma }}</span>
+                    <span class="fw-bold">Rs. {{ subtotal|floatformat:2|intcomma }}</span>
                 </div>
                 
                 <div class="summary-row">
                     <span>Shipping</span>
-                    <span class="fw-bold">${{ shipping|default:"10.00"|floatformat:2|intcomma }}</span>
+                    <span class="fw-bold">Rs. {{ shipping|default:"10.00"|floatformat:2|intcomma }}</span>
                 </div>
                 
                 <div class="summary-row">
                     <span>Tax (10%)</span>
-                    <span class="fw-bold">${{ tax|floatformat:2|intcomma }}</span>
+                    <span class="fw-bold">Rs. {{ tax|floatformat:2|intcomma }}</span>
                 </div>
                 
                 {% if discount %}
                 <div class="summary-row text-success">
                     <span>Discount</span>
-                    <span class="fw-bold">-${{ discount|floatformat:2|intcomma }}</span>
+                    <span class="fw-bold">-Rs. {{ discount|floatformat:2|intcomma }}</span>
                 </div>
                 {% endif %}
                 
                 <div class="summary-row grand-total">
                     <span>Total</span>
-                    <span>${{ total|floatformat:2|intcomma }}</span>
+                    <span>Rs. {{ total|floatformat:2|intcomma }}</span>
                 </div>
                 
                 <!-- Coupon Code -->

@@ -8,7 +8,9 @@
 <style>
     /* Page Header */
     .page-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background-image: linear-gradient(rgba(15, 23, 42, 0.55), rgba(15, 23, 42, 0.55)), url('https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1800&q=80');
+        background-size: cover;
+        background-position: center;
         padding: 50px 0;
         margin-bottom: 40px;
         border-radius: 20px;
@@ -472,7 +474,7 @@
             <div class="stat-icon">
                 <i class="bi bi-cash-stack"></i>
             </div>
-            <div class="stat-value">${{ total_spent|floatformat:2|intcomma }}</div>
+            <div class="stat-value">Rs. {{ total_spent|floatformat:2|intcomma }}</div>
             <div class="stat-label">Total Spent</div>
         </div>
     </div>
@@ -494,8 +496,8 @@
             <!-- Order Header -->
             <div class="order-header">
                 <div>
-                    <span class="order-id">Order #{{ order.order_id }}</span>
-                    <span class="order-id">• {{ order.items.count }} items</span>
+                    <span class="order-id">Order #{{ order.id }}</span>
+                    <span class="order-id">• {{ order.items.count|default:1 }} items</span>
                 </div>
                 <span class="order-status status-{{ order.status|lower }}">
                     {{ order.get_status_display }}
@@ -515,7 +517,7 @@
                 <div class="detail-item">
                     <span class="detail-label">Payment Status</span>
                     <span class="detail-value {% if order.payment_status == 'paid' %}text-success{% endif %}">
-                        {{ order.get_payment_status_display }}
+                        {{ order.get_payment_status_display|default:"Pending" }}
                     </span>
                 </div>
                 <div class="detail-item">
@@ -539,11 +541,11 @@
                         <div class="product-name">{{ item.product_name }}</div>
                         <div class="product-meta">
                             <span>Quantity: {{ item.quantity }}</span>
-                            <span>Price: ${{ item.price|floatformat:2|intcomma }}</span>
+                            <span>Price: Rs. {{ item.price|floatformat:2|intcomma }}</span>
                         </div>
                     </div>
                     <div class="product-price">
-                        ${{ item.total|floatformat:2|intcomma }}
+                        Rs. {{ item.total|floatformat:2|intcomma }}
                     </div>
                 </div>
                 {% endfor %}
@@ -552,19 +554,19 @@
             <!-- Order Footer -->
             <div class="order-footer">
                 <div class="order-total">
-                    Total Amount: <span>${{ order.total_amount|floatformat:2|intcomma }}</span>
+                    Total Amount: <span>Rs. {{ order.total_amount|floatformat:2|intcomma }}</span>
                 </div>
                 <div class="order-actions">
-                    <a href="{% url 'store:order_detail' order.order_id %}" class="action-btn btn-view">
+                    <a href="{% url 'store:order_detail' order.id %}" class="action-btn btn-view">
                         <i class="bi bi-eye"></i> View Details
                     </a>
                     {% if order.status != 'delivered' and order.status != 'cancelled' %}
-                    <a href="{% url 'store:track_order' order.order_id %}" class="action-btn btn-track">
+                    <button type="button" class="action-btn btn-track" onclick="trackOrder({{ order.id }})">
                         <i class="bi bi-truck"></i> Track Order
-                    </a>
+                    </button>
                     {% endif %}
-                    <a href="{% url 'store:invoice' order.order_id %}" class="action-btn btn-invoice">
-                        <i class="bi bi-file-text"></i> Invoice
+                    <a href="{% url 'store:order_detail' order.id %}" class="action-btn btn-invoice">
+                        <i class="bi bi-file-text"></i> Order Summary
                     </a>
                 </div>
             </div>

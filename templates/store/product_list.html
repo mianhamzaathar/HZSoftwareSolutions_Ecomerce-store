@@ -8,7 +8,9 @@
 <style>
     /* Modern Gradient Header */
     .page-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background-image: linear-gradient(rgba(15, 23, 42, 0.55), rgba(15, 23, 42, 0.55)), url('https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&w=1800&q=80');
+        background-size: cover;
+        background-position: center;
         padding: 60px 0;
         margin-bottom: 50px;
         position: relative;
@@ -635,7 +637,7 @@
         background: #cbd5e1;
         cursor: not-allowed;
     }
-    
+
     /* Empty State */
     .empty-state {
         text-align: center;
@@ -860,7 +862,7 @@
                     <!-- Price Range -->
                     <div class="filter-group">
                         <h6 class="filter-title">
-                            <i class="bi bi-currency-dollar"></i>
+                            <i class="bi bi-currency-rupee"></i>
                             Price Range
                         </h6>
                         <div class="price-range">
@@ -1014,9 +1016,9 @@
                         <div class="product-info">
                             <div class="product-category">{{ product.category.name }}</div>
                             <h5 class="product-name">
-                                <a href="/product/{{ product.slug }}/">{{ product.name|truncatechars:35 }}</a>
+                                <a href="{% url 'store:product_detail' product.slug %}">{{ product.name|truncatechars:35 }}</a>
                             </h5>
-                            
+
                             <!-- Rating -->
                             <div class="product-rating">
                                 {% for i in "12345"|make_list %}
@@ -1030,16 +1032,16 @@
                                 {% endfor %}
                                 <span class="rating-count">{{ product.reviews_count }}</span>
                             </div>
-                            
+
                             <!-- Price -->
                             <div class="product-price">
-                                <span class="current-price">${{ product.discounted_price|floatformat:2|intcomma }}</span>
+                                <span class="current-price">Rs. {{ product.discounted_price|floatformat:2|intcomma }}</span>
                                 {% if product.old_price > product.discounted_price %}
-                                    <span class="old-price">${{ product.old_price|floatformat:2|intcomma }}</span>
+                                    <span class="old-price">Rs. {{ product.old_price|floatformat:2|intcomma }}</span>
                                     <span class="discount-percent">-{{ product.discount_percentage }}%</span>
                                 {% endif %}
                             </div>
-                            
+
                             <!-- Stock Status -->
                             <div class="stock-status">
                                 {% if product.stock_quantity > 10 %}
@@ -1053,10 +1055,10 @@
                                     <span class="out-of-stock">Out of Stock</span>
                                 {% endif %}
                             </div>
-                            
+
                             <!-- Add to Cart Button -->
                             {% if product.stock_quantity > 0 %}
-                                <button class="add-to-cart-btn" onclick="addToCart({{ product.id }})">
+                                <button class="add-to-cart-btn" onclick="addToCart(this, {{ product.id }})">
                                     <i class="bi bi-cart-plus"></i>
                                     Add to Cart
                                 </button>
@@ -1156,9 +1158,8 @@
     }
     
     // Add to Cart Function with loading state
-    function addToCart(productId) {
+    function addToCart(button, productId) {
         {% if user.is_authenticated %}
-        const button = event.currentTarget;
         const originalText = button.innerHTML;
         
         button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Adding...';

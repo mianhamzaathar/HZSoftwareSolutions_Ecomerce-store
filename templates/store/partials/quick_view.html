@@ -1,0 +1,41 @@
+{% load humanize %}
+{% load static %}
+
+<div class="row g-4">
+    <div class="col-md-5">
+        <img
+            src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'images/placeholder.jpg' %}{% endif %}"
+            alt="{{ product.name }}"
+            class="img-fluid rounded-3"
+            style="width: 100%; height: 320px; object-fit: cover;"
+        >
+    </div>
+    <div class="col-md-7">
+        <h4 class="mb-2">{{ product.name }}</h4>
+        <p class="text-muted mb-2">{{ product.category.name }}</p>
+
+        <div class="mb-3">
+            {% if product.discounted_price and product.discounted_price < product.price %}
+            <span class="fw-bold fs-4 text-primary">Rs. {{ product.discounted_price|floatformat:2|intcomma }}</span>
+            <span class="text-muted text-decoration-line-through ms-2">Rs. {{ product.price|floatformat:2|intcomma }}</span>
+            {% else %}
+            <span class="fw-bold fs-4 text-primary">Rs. {{ product.price|floatformat:2|intcomma }}</span>
+            {% endif %}
+        </div>
+
+        <p class="text-muted mb-4">{{ product.description|truncatechars:180 }}</p>
+
+        <div class="d-flex gap-2">
+            {% if product.stock_quantity > 0 %}
+            <button class="btn btn-primary" onclick="addToCart(this, {{ product.id }})">
+                <i class="bi bi-cart-plus me-1"></i> Add to Cart
+            </button>
+            {% else %}
+            <button class="btn btn-secondary" disabled>Out of Stock</button>
+            {% endif %}
+            <a href="{% url 'store:product_detail' product.slug %}" class="btn btn-outline-primary">
+                View Details
+            </a>
+        </div>
+    </div>
+</div>

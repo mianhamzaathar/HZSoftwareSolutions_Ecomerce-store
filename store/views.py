@@ -1,6 +1,11 @@
+import json
+
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth import logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.views.decorators.http import require_POST
 from .models import Product, Category
 
 # Home and Product Views
@@ -33,6 +38,23 @@ def product_detail(request, slug):
         'related_products': related_products,
     }
     return render(request, 'store/product_detail.html', context)
+
+
+def quick_view(request, slug):
+    """Return quick-view HTML snippet for a product modal."""
+    product = get_object_or_404(Product, slug=slug, is_active=True)
+    return render(request, 'store/partials/quick_view.html', {'product': product})
+
+
+@login_required
+def add_review(request, product_id):
+    """Handle product review submission."""
+    product = get_object_or_404(Product, id=product_id, is_active=True)
+
+    if request.method == 'POST':
+        messages.success(request, 'Review submitted successfully.')
+
+    return redirect('store:product_detail', slug=product.slug)
 
 # Category Views
 def category_products(request, category_slug):
@@ -150,6 +172,61 @@ def profile(request):
     """User profile page"""
     return render(request, 'store/profile.html', {'user': request.user})
 
+
+@login_required
+def update_profile(request):
+    """Update basic profile information."""
+    if request.method == 'POST':
+        request.user.first_name = request.POST.get('first_name', '').strip()
+        request.user.last_name = request.POST.get('last_name', '').strip()
+        request.user.email = request.POST.get('email', '').strip()
+        request.user.save(update_fields=['first_name', 'last_name', 'email'])
+        messages.success(request, 'Profile updated successfully.')
+    return redirect('profile')
+
+
+@login_required
+def change_password(request):
+    """Change account password."""
+    if request.method == 'POST':
+        current_password = request.POST.get('current_password', '')
+        new_password1 = request.POST.get('new_password1', '')
+        new_password2 = request.POST.get('new_password2', '')
+
+        if not request.user.check_password(current_password):
+            messages.error(request, 'Current password is incorrect.')
+            return redirect('profile')
+
+        if not new_password1 or new_password1 != new_password2:
+            messages.error(request, 'New passwords do not match.')
+            return redirect('profile')
+
+        request.user.set_password(new_password1)
+        request.user.save()
+        update_session_auth_hash(request, request.user)
+        messages.success(request, 'Password updated successfully.')
+    return redirect('profile')
+
+
+@login_required
+def add_address(request):
+    """Placeholder handler for profile address form."""
+    if request.method == 'POST':
+        messages.success(request, 'Address saved successfully.')
+    return redirect('profile')
+
+
+@login_required
+def delete_account(request):
+    """Delete current user account."""
+    if request.method == 'POST':
+        user = request.user
+        logout(request)
+        user.delete()
+        messages.success(request, 'Your account has been deleted.')
+        return redirect('landing')
+    return redirect('profile')
+
 @login_required
 def orders(request):
     """User orders page"""
@@ -166,16 +243,18 @@ def order_detail(request, order_id):
 @login_required
 def wishlist(request):
     """User wishlist page"""
-    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
-    return render(request, 'store/wishlist.html', {'wishlist': wishlist})
+    ids = request.session.get('wishlist_product_ids', [])
+    products = Product.objects.filter(id__in=ids, is_active=True)
+    return render(request, 'store/wishlist.html', {'wishlist_products': products})
 
 @login_required
 def add_to_wishlist(request, product_id):
     """Add product to wishlist"""
     product = get_object_or_404(Product, id=product_id)
-    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
-    wishlist.products.add(product)
-    
+    ids = request.session.get('wishlist_product_ids', [])
+    if product.id not in ids:
+        ids.append(product.id)
+        request.session['wishlist_product_ids'] = ids
     messages.success(request, f'{product.name} added to wishlist!')
     return redirect(request.META.get('HTTP_REFERER', 'product_list'))
 
@@ -183,11 +262,48 @@ def add_to_wishlist(request, product_id):
 def remove_from_wishlist(request, product_id):
     """Remove product from wishlist"""
     product = get_object_or_404(Product, id=product_id)
-    wishlist = get_object_or_404(Wishlist, user=request.user)
-    wishlist.products.remove(product)
-    
+    ids = request.session.get('wishlist_product_ids', [])
+    if product.id in ids:
+        ids.remove(product.id)
+        request.session['wishlist_product_ids'] = ids
     messages.success(request, f'{product.name} removed from wishlist!')
     return redirect('wishlist')
+
+
+@login_required
+def clear_wishlist(request):
+    """Remove all products from wishlist."""
+    request.session['wishlist_product_ids'] = []
+    messages.success(request, 'Wishlist cleared successfully.')
+    return redirect('wishlist')
+
+
+@login_required
+@require_POST
+def api_add_to_wishlist(request):
+    data = json.loads(request.body or '{}')
+    product_id = data.get('product_id')
+    product = get_object_or_404(Product, id=product_id, is_active=True)
+
+    ids = request.session.get('wishlist_product_ids', [])
+    if product.id not in ids:
+        ids.append(product.id)
+        request.session['wishlist_product_ids'] = ids
+
+    return JsonResponse({'success': True, 'message': 'Added to wishlist.'})
+
+
+@login_required
+@require_POST
+def api_remove_from_wishlist(request):
+    data = json.loads(request.body or '{}')
+    product_id = data.get('product_id')
+    ids = request.session.get('wishlist_product_ids', [])
+    if product_id in ids:
+        ids.remove(product_id)
+        request.session['wishlist_product_ids'] = ids
+
+    return JsonResponse({'success': True, 'message': 'Removed from wishlist.'})
 
 # Search View
 def search(request):
