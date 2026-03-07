@@ -1,4 +1,4 @@
-# HZ Software Solutions - Ecommerce Store
+# Hamzify - Ecommerce Store
 
 A Django-based ecommerce web application with product catalog, cart, wishlist, profile, orders, and payment flow.
 
