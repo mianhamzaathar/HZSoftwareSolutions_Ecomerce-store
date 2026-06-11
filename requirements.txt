@@ -1,3 +1,4 @@
 Django==5.2.12
 Pillow==12.1.1
 requests==2.32.5
+stripe==14.3.0
