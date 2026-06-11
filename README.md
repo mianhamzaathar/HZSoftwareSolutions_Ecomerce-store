@@ -4,7 +4,7 @@ A Django-based ecommerce web application with product catalog, cart, wishlist, p
 
 
 ## UI Preview
-![UI Preview](pic.png)
+![Hamzify Landing Preview](docs/images/landing-ss.png)
 
 ## Tech Stack
 - Python 3.10+
