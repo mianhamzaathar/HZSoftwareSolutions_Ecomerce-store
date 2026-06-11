@@ -7,6 +7,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.http import require_POST
 from .models import Product, Category
+from .models import ProductReview
+from cart.models import Cart, CartItem
+from orders.models import Order
 
 # Home and Product Views
 def home(request):
@@ -32,10 +35,14 @@ def product_list(request):
 def product_detail(request, slug):
     """Product detail page"""
     product = get_object_or_404(Product, slug=slug, is_active=True)
+    Product.objects.filter(id=product.id).update(view_count=product.view_count + 1)
+    product.refresh_from_db(fields=['view_count'])
     related_products = Product.objects.filter(category=product.category, is_active=True).exclude(id=product.id)[:4]
     context = {
         'product': product,
         'related_products': related_products,
+        'reviews': product.approved_reviews,
+        'variations': product.variations.filter(is_active=True),
     }
     return render(request, 'store/product_detail.html', context)
 
@@ -52,6 +59,16 @@ def add_review(request, product_id):
     product = get_object_or_404(Product, id=product_id, is_active=True)
 
     if request.method == 'POST':
+        rating = max(1, min(5, int(request.POST.get('rating', 5) or 5)))
+        ProductReview.objects.update_or_create(
+            product=product,
+            user=request.user,
+            defaults={
+                'rating': rating,
+                'comment': request.POST.get('comment', '').strip(),
+                'is_approved': True,
+            },
+        )
         messages.success(request, 'Review submitted successfully.')
 
     return redirect('store:product_detail', slug=product.slug)
@@ -129,37 +146,7 @@ def update_cart(request, item_id):
 @login_required
 def checkout(request):
     """Checkout page"""
-    cart = get_object_or_404(Cart, user=request.user, is_active=True)
-    
-    if request.method == 'POST':
-        # Process order
-        order = Order.objects.create(
-            user=request.user,
-            total_amount=cart.get_total(),
-            shipping_address=request.POST.get('address'),
-            payment_method=request.POST.get('payment_method')
-        )
-        
-        # Transfer cart items to order
-        for item in cart.items.all():
-            order.items.create(
-                product=item.product,
-                quantity=item.quantity,
-                price=item.product.price
-            )
-        
-        # Deactivate cart
-        cart.is_active = False
-        cart.save()
-        
-        messages.success(request, 'Order placed successfully!')
-        return redirect('checkout_success')
-    
-    context = {
-        'cart': cart,
-        'total': cart.get_total(),
-    }
-    return render(request, 'store/checkout.html', context)
+    return redirect('/checkout/')
 
 @login_required
 def checkout_success(request):

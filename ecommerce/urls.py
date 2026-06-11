@@ -6,6 +6,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 import store.urls as store_urls
 from store import views as store_views
+from orders import views as order_views
 
 def landing_view(request):
     return render(request, 'landing.html')
@@ -19,6 +20,7 @@ urlpatterns = [
     path('profile/', RedirectView.as_view(pattern_name='store:profile', permanent=False), name='profile'),
     path('wishlist/', RedirectView.as_view(pattern_name='store:wishlist', permanent=False), name='wishlist'),
     path('search/', RedirectView.as_view(pattern_name='store:search', permanent=False), name='search'),
+    path('checkout/', order_views.checkout, name='checkout'),
 
     # Store
     path('store/', include('store.urls')),

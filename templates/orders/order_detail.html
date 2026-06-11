@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}Order #{{ order.id }} - Hamzify{% endblock %}
+
+{% block content %}
+<div class="card p-4 mb-4">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+        <div>
+            <h1 class="h3 mb-1">Order #{{ order.id }}</h1>
+            <p class="text-muted mb-0">{{ order.created_at|date:"M d, Y h:i A" }}</p>
+        </div>
+        <div class="text-end">
+            <span class="badge bg-primary">{{ order.get_status_display }}</span>
+            <span class="badge bg-secondary">{{ order.get_payment_status_display }}</span>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card p-4">
+            <h2 class="h5 mb-3">Items</h2>
+            {% for item in order.items.all %}
+            <div class="d-flex justify-content-between border-bottom py-3">
+                <div>
+                    <strong>{{ item.product_name }}</strong>
+                    <div class="text-muted">Qty {{ item.quantity }} x Rs. {{ item.price|floatformat:2|intcomma }}</div>
+                </div>
+                <strong>Rs. {{ item.total|floatformat:2|intcomma }}</strong>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card p-4 mb-4">
+            <h2 class="h5 mb-3">Summary</h2>
+            <div class="d-flex justify-content-between"><span>Subtotal</span><strong>Rs. {{ order.subtotal|floatformat:2|intcomma }}</strong></div>
+            <div class="d-flex justify-content-between mt-2"><span>Shipping</span><strong>Rs. {{ order.shipping_amount|floatformat:2|intcomma }}</strong></div>
+            <div class="d-flex justify-content-between mt-2"><span>Tax</span><strong>Rs. {{ order.tax_amount|floatformat:2|intcomma }}</strong></div>
+            <div class="d-flex justify-content-between mt-2"><span>Discount</span><strong>Rs. {{ order.discount_amount|floatformat:2|intcomma }}</strong></div>
+            <div class="d-flex justify-content-between border-top mt-3 pt-3 fs-5"><span>Total</span><strong>Rs. {{ order.total_amount|floatformat:2|intcomma }}</strong></div>
+            <a class="btn btn-dark w-100 mt-3" href="{% url 'invoice_pdf' order.id %}">Download Invoice PDF</a>
+        </div>
+
+        {% if order.can_cancel %}
+        <form method="post" action="{% url 'cancel_order' order.id %}" class="card p-4 mb-4">
+            {% csrf_token %}
+            <h2 class="h6">Cancel Order</h2>
+            <textarea class="form-control mb-3" name="reason" rows="2" placeholder="Reason"></textarea>
+            <button class="btn btn-outline-danger" type="submit">Cancel Order</button>
+        </form>
+        {% endif %}
+
+        {% if order.can_refund %}
+        <form method="post" action="{% url 'request_refund' order.id %}" class="card p-4">
+            {% csrf_token %}
+            <h2 class="h6">Request Refund</h2>
+            <textarea class="form-control mb-3" name="reason" rows="2" placeholder="Reason" required></textarea>
+            <button class="btn btn-outline-primary" type="submit">Submit Refund Request</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

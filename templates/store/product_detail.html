@@ -4,7 +4,9 @@
 {% load static %}
 {% load humanize %}
 
-{% block title %}{{ product.name }} - Hamzify{% endblock %}
+{% block title %}{{ product.seo_title|default:product.name }} - Hamzify{% endblock %}
+{% block meta_description %}{{ product.seo_description|default:product.description|truncatechars:155 }}{% endblock %}
+{% block meta_keywords %}{{ product.seo_keywords|default:product.category.name }}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -840,7 +842,6 @@
     
     // Add to cart
     function addToCart(productId) {
-        {% if user.is_authenticated %}
         fetch('/api/cart/add/', {
             method: 'POST',
             headers: {
@@ -864,12 +865,6 @@
         .catch(error => {
             showNotification('Failed to add product', 'error');
         });
-        {% else %}
-        showNotification('Please login to add items to cart', 'warning');
-        setTimeout(() => {
-            window.location.href = '{% url "login" %}';
-        }, 2000);
-        {% endif %}
     }
     
     // Add to wishlist
@@ -900,7 +895,7 @@
     function buyNow(productId) {
         addToCart(productId);
         setTimeout(() => {
-            window.location.href = '{% url "checkout" %}';
+            window.location.href = '/checkout/';
         }, 1000);
     }
     

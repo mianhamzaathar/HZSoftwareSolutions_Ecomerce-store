@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}Checkout - Hamzify{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card p-4">
+            <h1 class="h3 mb-4">Checkout</h1>
+            <form method="post">
+                {% csrf_token %}
+                {% if not user.is_authenticated %}
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Name</label>
+                        <input class="form-control" name="guest_name" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Email</label>
+                        <input class="form-control" type="email" name="guest_email" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Phone</label>
+                        <input class="form-control" name="guest_phone">
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="mb-3">
+                    <label class="form-label">Shipping Address</label>
+                    <textarea class="form-control" name="shipping_address" rows="3" required></textarea>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Shipping Zone</label>
+                        <select class="form-select" name="shipping_zone">
+                            {% for zone in zones %}
+                            <option value="{{ zone.name }}">{{ zone.name }} - Rs. {{ zone.base_rate|floatformat:2|intcomma }}</option>
+                            {% empty %}
+                            <option value="Standard">Standard Shipping</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Payment Method</label>
+                        <select class="form-select" name="payment_method">
+                            {% if user.is_authenticated %}
+                            <option value="wallet">Wallet</option>
+                            {% endif %}
+                            <option value="cod">Cash on Delivery</option>
+                            <option value="stripe">Stripe Card</option>
+                            <option value="bank">Bank Transfer</option>
+                            <option value="paypal">PayPal</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary mt-4" type="submit">Place Order</button>
+            </form>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card p-4">
+            <h2 class="h5 mb-3">Order Summary</h2>
+            {% for item in items %}
+            <div class="d-flex justify-content-between border-bottom py-2">
+                <span>{{ item.product.name }} x {{ item.quantity }}</span>
+                <strong>Rs. {{ item.total_price|floatformat:2|intcomma }}</strong>
+            </div>
+            {% endfor %}
+            <div class="d-flex justify-content-between mt-3"><span>Subtotal</span><strong>Rs. {{ subtotal|floatformat:2|intcomma }}</strong></div>
+            <div class="d-flex justify-content-between mt-2"><span>Shipping</span><strong>Rs. {{ shipping|floatformat:2|intcomma }}</strong></div>
+            <div class="d-flex justify-content-between mt-2"><span>Tax</span><strong>Rs. {{ tax|floatformat:2|intcomma }}</strong></div>
+            {% if discount %}
+            <div class="d-flex justify-content-between mt-2 text-success"><span>Discount</span><strong>-Rs. {{ discount|floatformat:2|intcomma }}</strong></div>
+            {% endif %}
+            <div class="d-flex justify-content-between border-top mt-3 pt-3 fs-5"><span>Total</span><strong>Rs. {{ total|floatformat:2|intcomma }}</strong></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

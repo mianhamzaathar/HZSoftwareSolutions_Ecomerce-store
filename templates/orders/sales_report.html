@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}Sales Report - Hamzify{% endblock %}
+
+{% block content %}
+<div class="card p-4 mb-4">
+    <h1 class="h3 mb-0">Sales Report</h1>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="card p-3"><span class="text-muted">Total Sales</span><strong class="fs-4">Rs. {{ stats.total_sales|floatformat:2|intcomma }}</strong></div></div>
+    <div class="col-md-3"><div class="card p-3"><span class="text-muted">Orders</span><strong class="fs-4">{{ stats.orders_count }}</strong></div></div>
+    <div class="col-md-3"><div class="card p-3"><span class="text-muted">Paid Orders</span><strong class="fs-4">{{ stats.paid_orders }}</strong></div></div>
+    <div class="col-md-3"><div class="card p-3"><span class="text-muted">Cancelled</span><strong class="fs-4">{{ stats.cancelled_orders }}</strong></div></div>
+</div>
+
+<div class="card p-4">
+    <h2 class="h5 mb-3">By Status</h2>
+    <table class="table">
+        <thead><tr><th>Status</th><th>Orders</th><th>Total</th></tr></thead>
+        <tbody>
+            {% for row in by_status %}
+            <tr>
+                <td>{{ row.status }}</td>
+                <td>{{ row.count }}</td>
+                <td>Rs. {{ row.total|default:0|floatformat:2|intcomma }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
