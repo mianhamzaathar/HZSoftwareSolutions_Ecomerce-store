@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Hamzify ecommerce store by HZ Software Solutions.">
+  <title>Hamzify | Ecommerce Store</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #eef4f8;
+      --surface: #ffffff;
+      --ink: #102033;
+      --muted: #5d6f82;
+      --brand: #0f766e;
+      --accent: #0ea5e9;
+      --gold: #f59e0b;
+      --line: #d8e4ee;
+      --shadow: 0 20px 45px rgba(15, 32, 51, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav-inner {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: linear-gradient(135deg, var(--brand), var(--accent));
+      font-weight: 800;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.94rem;
+    }
+
+    .nav-links a {
+      padding: 10px 12px;
+      border-radius: 10px;
+    }
+
+    .nav-links a:hover {
+      background: #f4f8fb;
+      color: var(--ink);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      font-weight: 800;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      color: white;
+      background: linear-gradient(135deg, var(--brand), var(--accent));
+      box-shadow: 0 12px 26px rgba(14, 165, 233, 0.24);
+    }
+
+    .btn-soft {
+      color: var(--ink);
+      background: white;
+      border-color: var(--line);
+    }
+
+    .hero {
+      padding: 58px 0 38px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 34px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: #075985;
+      background: #e0f2fe;
+      border: 1px solid #bae6fd;
+      font-size: 0.84rem;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.35rem, 6vw, 4.6rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      margin: 20px 0 0;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.75;
+      max-width: 620px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .preview {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .preview-bar {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      height: 42px;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--line);
+      background: #f8fafc;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #cbd5e1;
+    }
+
+    .dot:nth-child(1) {
+      background: #ef4444;
+    }
+
+    .dot:nth-child(2) {
+      background: #f59e0b;
+    }
+
+    .dot:nth-child(3) {
+      background: #22c55e;
+    }
+
+    .preview img {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      object-position: top center;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin: 26px 0 50px;
+    }
+
+    .stat,
+    .feature {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 25px rgba(15, 32, 51, 0.06);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.7rem;
+      margin-bottom: 5px;
+    }
+
+    .stat span,
+    .feature p {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin: 0 0 18px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(1.6rem, 4vw, 2.35rem);
+      letter-spacing: 0;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 56px;
+    }
+
+    .feature-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 14px;
+      color: white;
+      background: linear-gradient(135deg, var(--brand), var(--accent));
+      font-weight: 800;
+    }
+
+    .feature h3 {
+      margin: 0 0 8px;
+      font-size: 1.12rem;
+    }
+
+    .feature p {
+      margin: 0;
+    }
+
+    .note {
+      margin: 0 0 46px;
+      padding: 18px 20px;
+      border-radius: 16px;
+      border: 1px solid #fde68a;
+      background: #fffbeb;
+      color: #7c2d12;
+      line-height: 1.6;
+    }
+
+    .footer {
+      padding: 26px 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      text-align: center;
+      background: white;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid,
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .nav-inner {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 14px 0;
+      }
+
+      .nav-links {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 4px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .shell {
+        width: min(100% - 24px, 1180px);
+      }
+
+      .hero {
+        padding-top: 34px;
+      }
+
+      .actions,
+      .btn {
+        width: 100%;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .section-title {
+        display: block;
+      }
+
+      .preview {
+        border-radius: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="shell nav-inner">
+      <a class="brand" href="./">
+        <span class="brand-mark">H</span>
+        <span>Hamzify Store</span>
+      </a>
+      <div class="nav-links">
+        <a href="#preview">Preview</a>
+        <a href="#features">Features</a>
+        <a href="https://github.com/mianhamzaathar/HZSoftwareSolutions_Ecomerce-store" target="_blank" rel="noreferrer">Source</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="shell hero-grid">
+        <div>
+          <div class="eyebrow">HZ Software Solutions ecommerce project</div>
+          <h1>Hamzify ecommerce store</h1>
+          <p class="lead">
+            A Django based online shopping application with product catalog, cart, wishlist,
+            user accounts, orders, search, and payment flow screens.
+          </p>
+          <div class="actions">
+            <a class="btn btn-primary" href="#preview">View Preview</a>
+            <a class="btn btn-soft" href="https://github.com/mianhamzaathar/HZSoftwareSolutions_Ecomerce-store" target="_blank" rel="noreferrer">Open GitHub Repo</a>
+          </div>
+        </div>
+
+        <div class="preview" id="preview" aria-label="Hamzify store preview">
+          <div class="preview-bar">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+          <img src="docs/images/landing-ss.png" alt="Hamzify ecommerce landing page screenshot">
+        </div>
+      </div>
+    </section>
+
+    <section class="shell stats" aria-label="Project highlights">
+      <div class="stat">
+        <strong>Django</strong>
+        <span>Backend framework</span>
+      </div>
+      <div class="stat">
+        <strong>SQLite</strong>
+        <span>Local database</span>
+      </div>
+      <div class="stat">
+        <strong>Cart</strong>
+        <span>Shopping workflow</span>
+      </div>
+      <div class="stat">
+        <strong>Auth</strong>
+        <span>User accounts</span>
+      </div>
+    </section>
+
+    <section class="shell" id="features">
+      <div class="section-title">
+        <h2>Store features</h2>
+        <p class="lead">Designed as a full ecommerce app, with this page serving as the GitHub Pages preview.</p>
+      </div>
+      <div class="features">
+        <article class="feature">
+          <div class="feature-icon">01</div>
+          <h3>Product catalog</h3>
+          <p>Browse products, categories, detail pages, ratings, wishlist actions, and quick view screens.</p>
+        </article>
+        <article class="feature">
+          <div class="feature-icon">02</div>
+          <h3>Cart and orders</h3>
+          <p>Add products to cart, update quantities, review totals, and move through order screens.</p>
+        </article>
+        <article class="feature">
+          <div class="feature-icon">03</div>
+          <h3>Responsive UI</h3>
+          <p>Mobile friendly layout adjustments for navigation, filters, product cards, cart, and footer.</p>
+        </article>
+      </div>
+
+      <p class="note">
+        GitHub Pages hosts static files only. The full Django app runs locally with
+        <strong>python manage.py runserver</strong> or on a Python hosting platform such as Render,
+        Railway, or PythonAnywhere.
+      </p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">2026 Hamzify | HZ Software Solutions</div>
+  </footer>
+</body>
+</html>
